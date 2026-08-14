@@ -88,3 +88,46 @@ for i in range(10):
     if i == 7:
         break         # stop at 7
     print(i)
+
+#Lists, Tuples, Dictionaries, Sets:
+# List (mutable, ordered)
+fruits = ["apple", "banana", "mango"]
+fruits.append("orange")
+fruits[0] = "kiwi"
+print(fruits)
+
+# Tuple (immutable, ordered)
+point = (10, 20)
+
+# Dictionary (key-value)
+person = {
+    "name": "Alex",
+    "age": 25,
+    "city": "Delhi"
+}
+print(person["name"])
+person["age"] = 26
+
+# Set (unique, unordered)
+numbers = {1, 2, 3, 3, 4}
+print(numbers)   # {1, 2, 3, 4}
+
+#Functions:
+def greet(name):
+    return f"Hello, {name}!"
+
+print(greet("Alex"))
+
+# Default arguments
+def power(base, exp=2):
+    return base ** exp
+
+print(power(5))      # 25
+print(power(5, 3))   # 125
+
+# *args and **kwargs
+def show(*args, **kwargs):
+    print(args)
+    print(kwargs)
+
+show(1, 2, 3, name="Alex", age=25)
