@@ -1,0 +1,420 @@
+================================================================================
+          BEGINNER PYTHON – DOCUMENTATION + EXPLANATION + INTERVIEW QUESTIONS
+================================================================================
+
+This is a complete beginner-level reference. Each section contains:
+- Clear explanation
+- Official-style documentation summary
+- Code examples
+- Important points
+- Common interview questions with answers
+
+
+================================================================================
+1. INTRODUCTION TO PYTHON
+================================================================================
+
+Explanation
+-----------
+Python is a high-level, interpreted, dynamically typed, general-purpose 
+programming language created by Guido van Rossum in 1991. It emphasizes 
+code readability using significant indentation.
+
+Key Features
+------------
+- Easy to learn and read
+- Interpreted (no compilation needed)
+- Dynamically typed
+- Cross-platform
+- Large standard library
+- Supports multiple paradigms (procedural, object-oriented, functional)
+
+How Python Works
+----------------
+1. You write a .py file
+2. Python interpreter reads it line by line
+3. Converts to bytecode → runs on Python Virtual Machine (PVM)
+
+Interview Questions
+-------------------
+Q: What is Python?
+A: High-level, interpreted, dynamically typed programming language known for 
+   readability.
+
+Q: Who created Python?
+A: Guido van Rossum
+
+Q: Is Python compiled or interpreted?
+A: Interpreted (but it is first compiled to bytecode)
+
+Q: What is the difference between Python 2 and Python 3?
+A: Python 3 is the current version. Major differences: print is a function, 
+   integer division returns float, Unicode by default, etc. Python 2 is 
+   discontinued.
+
+Q: What are the advantages of Python?
+A: Simple syntax, large community, extensive libraries, versatility 
+   (web, data science, AI, automation).
+
+
+================================================================================
+2. VARIABLES AND DATA TYPES
+================================================================================
+
+Explanation
+-----------
+A variable is a name that refers to a value stored in memory. Python is 
+dynamically typed → you don’t declare the type.
+
+Creating Variables
+------------------
+name = "Rahul"       # str
+age = 25             # int
+height = 5.9         # float
+is_student = True    # bool
+data = None          # NoneType
+
+Common Data Types
+-----------------
+Type        Example              Description
+----------  -------------------  --------------------------------
+int         10, -5               Whole numbers
+float       3.14, -0.5           Decimal numbers
+str         "Hello"              Text (immutable)
+bool        True, False          Boolean values
+NoneType    None                 Represents absence of value
+list        [1, 2, 3]            Ordered, mutable collection
+tuple       (1, 2, 3)            Ordered, immutable
+dict        {"a": 1}             Key-value pairs
+set         {1, 2, 3}            Unordered, unique elements
+
+Type Checking & Conversion
+--------------------------
+print(type(age))           # <class 'int'>
+print(int(3.9))            # 3
+print(float("10.5"))       # 10.5
+print(str(100))            # "100"
+print(bool(0))             # False
+print(bool(1))             # True
+
+Important Rules
+---------------
+- Variable names are case-sensitive (Age ≠ age)
+- Cannot start with a number
+- Cannot use reserved keywords (if, for, class, etc.)
+- Use snake_case by convention: user_name
+
+Interview Questions
+-------------------
+Q: What is dynamic typing?
+A: Type of variable is determined at runtime. You can change type of a variable.
+
+Q: Is Python strongly typed or weakly typed?
+A: Strongly typed (you cannot add str + int without conversion).
+
+Q: What is the difference between is and == ?
+A: == checks value equality. is checks whether two variables point to the 
+   same object in memory.
+
+Q: What is None?
+A: Special constant representing null/absence of value. It is of type NoneType.
+
+Q: How do you check the type of a variable?
+A: Using type() or isinstance().
+
+
+================================================================================
+3. OPERATORS
+================================================================================
+
+Arithmetic Operators
+--------------------
+a, b = 10, 3
+print(a + b)    # 13
+print(a - b)    # 7
+print(a * b)    # 30
+print(a / b)    # 3.333...  (true division)
+print(a // b)   # 3         (floor division)
+print(a % b)    # 1         (modulus)
+print(a ** b)   # 1000      (exponentiation)
+
+Comparison Operators → return True / False
+------------------------------------------
+== , != , > , < , >= , <=
+
+Logical Operators
+-----------------
+and , or , not
+
+Assignment Operators
+--------------------
+= , += , -= , *= , /= , //= , %= , **=
+
+Membership Operators
+--------------------
+in , not in
+
+Identity Operators
+------------------
+is , is not
+
+Interview Questions
+-------------------
+Q: What is the difference between / and // ?
+A: / always returns float. // returns floor division 
+   (integer result towards negative infinity).
+
+Q: What does ** operator do?
+A: Exponentiation (power).
+
+Q: Explain short-circuit evaluation in and / or.
+A: and stops if first is False. or stops if first is True.
+
+Q: What is the difference between is and == ?
+A: Already covered above.
+
+
+================================================================================
+4. STRINGS
+================================================================================
+
+Explanation
+-----------
+Strings are immutable sequences of characters.
+
+s = "Hello Python"
+print(s[0])          # H
+print(s[-1])         # n
+print(s[0:5])        # Hello
+print(s[::-1])       # nohtyP olleH (reverse)
+
+Common Methods
+--------------
+s.upper()
+s.lower()
+s.strip()
+s.replace("Python", "World")
+s.split()
+s.startswith("Hello")
+s.endswith("n")
+s.find("P")
+len(s)
+
+f-strings (Recommended)
+-----------------------
+name = "Amit"
+age = 22
+print(f"My name is {name} and I am {age} years old")
+
+Interview Questions
+-------------------
+Q: Are strings mutable in Python?
+A: No, strings are immutable.
+
+Q: How do you reverse a string?
+A: s[::-1] or ''.join(reversed(s))
+
+Q: Difference between find() and index()?
+A: find() returns -1 if not found. index() raises ValueError.
+
+Q: What is an f-string?
+A: Formatted string literal introduced in Python 3.6.
+
+
+================================================================================
+5. CONTROL FLOW
+================================================================================
+
+if-elif-else
+------------
+age = 18
+if age >= 18:
+    print("Adult")
+elif age >= 13:
+    print("Teen")
+else:
+    print("Child")
+
+for loop
+--------
+for i in range(5):          # 0 to 4
+    print(i)
+
+for fruit in ["apple", "banana"]:
+    print(fruit)
+
+while loop
+----------
+count = 0
+while count < 5:
+    print(count)
+    count += 1
+
+break, continue, pass
+---------------------
+- break     → exit loop
+- continue  → skip current iteration
+- pass      → do nothing (placeholder)
+
+Interview Questions
+-------------------
+Q: What is the difference between break and continue?
+A: break terminates the loop. continue skips to next iteration.
+
+Q: What does range(5) generate?
+A: Numbers from 0 to 4.
+
+Q: Can we use else with loops?
+A: Yes. else block runs if loop completes without break.
+
+Q: What is infinite loop? How to stop it?
+A: Loop that never ends. Stop with break or Ctrl + C.
+
+
+================================================================================
+6. DATA STRUCTURES (Most Important for Interviews)
+================================================================================
+
+List (Mutable, Ordered)
+-----------------------
+nums = [10, 20, 30]
+nums.append(40)
+nums.insert(1, 15)
+nums.remove(20)
+nums.pop()
+print(nums[0])
+print(len(nums))
+
+Tuple (Immutable, Ordered)
+--------------------------
+point = (10, 20)
+# point[0] = 5  → Error
+
+Dictionary (Key-Value, Mutable)
+-------------------------------
+student = {
+    "name": "Priya",
+    "age": 21,
+    "course": "Python"
+}
+print(student["name"])
+student["age"] = 22
+print(student.get("city", "Not Found"))
+
+Set (Unordered, Unique)
+-----------------------
+s = {1, 2, 2, 3}
+s.add(4)
+s.remove(2)
+
+Interview Questions
+-------------------
+Q: Difference between list and tuple?
+A: List is mutable, tuple is immutable. Tuples are slightly faster and can 
+   be used as dictionary keys.
+
+Q: Difference between list and set?
+A: List allows duplicates and is ordered. Set does not allow duplicates 
+   and is unordered.
+
+Q: How to remove duplicates from a list?
+A: list(set(my_list))
+
+Q: What is the time complexity of dictionary lookup?
+A: Average O(1)
+
+Q: Can we have a list as a dictionary key?
+A: No, because list is mutable (unhashable).
+
+Q: Difference between remove(), pop() and del in list?
+A: remove(value) removes by value. 
+   pop(index) removes by index and returns it. 
+   del can delete by index or slice.
+
+
+================================================================================
+7. FUNCTIONS
+================================================================================
+
+def greet(name="Guest"):
+    """This function greets the user"""
+    return f"Hello, {name}!"
+
+print(greet("Sneha"))
+print(greet())
+
+Types of Arguments
+------------------
+- Positional
+- Keyword
+- Default
+- *args (variable positional)
+- **kwargs (variable keyword)
+
+def example(*args, **kwargs):
+    print(args)
+    print(kwargs)
+
+example(1, 2, 3, name="Amit", age=25)
+
+Interview Questions
+-------------------
+Q: What is a function?
+A: Reusable block of code that performs a specific task.
+
+Q: What is the difference between parameter and argument?
+A: Parameter is the variable in function definition. 
+   Argument is the actual value passed.
+
+Q: What does return do?
+A: Exits the function and optionally sends a value back.
+
+Q: What is *args and **kwargs?
+A: *args collects extra positional arguments as tuple. 
+   **kwargs collects extra keyword arguments as dictionary.
+
+Q: What is a docstring?
+A: String literal (usually triple quotes) used to document a 
+   function/class/module.
+
+
+================================================================================
+8. INPUT / OUTPUT
+================================================================================
+
+name = input("Enter your name: ")     # always returns string
+age = int(input("Enter age: "))
+
+print("Hello", name)
+print(f"You are {age} years old")
+
+
+================================================================================
+QUICK BEGINNER INTERVIEW CHEAT SHEET
+================================================================================
+
+Topic                  Must Know
+---------------------  -------------------------------------------------------
+Data Types             int, float, str, bool, list, tuple, dict, set
+
+Mutable vs Immutable   list, dict, set → mutable
+                       str, tuple, int, float → immutable
+
+== vs is               Value vs Identity
+
+/ vs //                True division vs Floor division
+
+List methods           append, insert, remove, pop, sort, reverse
+
+Dictionary methods     get, keys, values, items, update
+
+String methods         upper, lower, split, join, replace, find
+
+Loops                  for, while, break, continue, else with loops
+
+Functions              def, return, default args, *args, **kwargs
+
+
+================================================================================
+END OF DOCUMENT
+================================================================================
