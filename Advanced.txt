@@ -1,0 +1,875 @@
+================================================================================
+     ADVANCED PYTHON – DOCUMENTATION + INTERVIEW QUESTIONS + PRACTICE CODES
+================================================================================
+
+This file covers Advanced Python topics with:
+- Clear explanations
+- Code examples
+- Interview questions
+- Practice tasks with solutions
+
+Topics Covered:
+1. Decorators (Deep Dive)
+2. Generators & Iterators (Advanced)
+3. Context Managers
+4. Advanced OOP (property, classmethod, staticmethod, magic methods)
+5. Collections Module
+6. functools Module
+7. Type Hints
+8. Regular Expressions
+9. Concurrency (Threading, Multiprocessing, Asyncio)
+10. Dataclasses
+11. Testing Basics
+
+
+================================================================================
+1. DECORATORS (Deep Dive)
+================================================================================
+
+Explanation
+-----------
+A decorator is a function that takes another function and extends its behavior
+without permanently modifying it. Decorators are heavily used in frameworks
+like Flask, Django, FastAPI, etc.
+
+Basic Decorator
+---------------
+def my_decorator(func):
+    def wrapper():
+        print("Something before the function")
+        func()
+        print("Something after the function")
+    return wrapper
+
+@my_decorator
+def say_hello():
+    print("Hello!")
+
+say_hello()
+
+
+Decorator with Arguments
+------------------------
+def repeat(times):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            for _ in range(times):
+                result = func(*args, **kwargs)
+            return result
+        return wrapper
+    return decorator
+
+@repeat(3)
+def greet(name):
+    print(f"Hello, {name}!")
+
+greet("Amit")
+
+
+Using functools.wraps (Best Practice)
+-------------------------------------
+from functools import wraps
+
+def my_decorator(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        print(f"Calling {func.__name__}")
+        return func(*args, **kwargs)
+    return wrapper
+
+@my_decorator
+def add(a, b):
+    """Adds two numbers"""
+    return a + b
+
+print(add(5, 3))
+print(add.__name__)        # Still 'add' because of @wraps
+print(add.__doc__)
+
+
+Class-based Decorator
+---------------------
+class CountCalls:
+    def __init__(self, func):
+        self.func = func
+        self.count = 0
+
+    def __call__(self, *args, **kwargs):
+        self.count += 1
+        print(f"Call {self.count} of {self.func.__name__}")
+        return self.func(*args, **kwargs)
+
+@CountCalls
+def say_hi():
+    print("Hi!")
+
+say_hi()
+say_hi()
+
+
+Interview Questions
+-------------------
+Q: What is a decorator?
+A: A function that takes another function and adds extra functionality
+   without changing the original function's code.
+
+Q: Why do we use @wraps?
+A: To preserve the original function's metadata (__name__, __doc__, etc.).
+
+Q: Can we apply multiple decorators?
+A: Yes. They are applied from bottom to top.
+
+Q: Difference between function decorator and class decorator?
+A: Function decorator returns a wrapper function. Class decorator uses
+   __call__ method.
+
+
+Practice Tasks
+--------------
+1. Create a decorator that measures the execution time of a function.
+2. Create a decorator that logs the arguments and return value of a function.
+3. Create a decorator that only allows a function to run during daytime
+   (9 AM to 5 PM).
+
+
+Solutions
+---------
+import time
+from functools import wraps
+from datetime import datetime
+
+# Task 1
+def timing_decorator(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        end = time.time()
+        print(f"{func.__name__} took {end - start:.4f} seconds")
+        return result
+    return wrapper
+
+@timing_decorator
+def slow_function():
+    time.sleep(1)
+    print("Finished")
+
+slow_function()
+
+# Task 2
+def logger(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        print(f"Calling {func.__name__} with args={args}, kwargs={kwargs}")
+        result = func(*args, **kwargs)
+        print(f"{func.__name__} returned {result}")
+        return result
+    return wrapper
+
+@logger
+def multiply(a, b):
+    return a * b
+
+multiply(4, 5)
+
+# Task 3
+def daytime_only(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        hour = datetime.now().hour
+        if 9 <= hour < 17:
+            return func(*args, **kwargs)
+        else:
+            print("This function can only run between 9 AM and 5 PM")
+    return wrapper
+
+
+================================================================================
+2. GENERATORS & ITERATORS (Advanced)
+================================================================================
+
+Explanation
+-----------
+Generators allow you to create iterators in a very memory-efficient way
+using the yield keyword. They produce items one at a time (lazy evaluation).
+
+Advanced Generator Examples
+---------------------------
+def infinite_sequence():
+    num = 0
+    while True:
+        yield num
+        num += 1
+
+gen = infinite_sequence()
+print(next(gen))
+print(next(gen))
+print(next(gen))
+
+
+# Generator Pipeline
+def integers():
+    for i in range(1, 10):
+        yield i
+
+def squared(seq):
+    for i in seq:
+        yield i * i
+
+def negated(seq):
+    for i in seq:
+        yield -i
+
+pipeline = negated(squared(integers()))
+print(list(pipeline))
+
+
+# yield from (Python 3.3+)
+def generator1():
+    yield from range(3)
+    yield from ["a", "b", "c"]
+
+print(list(generator1()))
+
+
+Interview Questions
+-------------------
+Q: Difference between return and yield?
+A: return terminates the function. yield pauses the function and saves state.
+
+Q: What is lazy evaluation?
+A: Values are generated only when needed, saving memory.
+
+Q: What is the advantage of generators over lists?
+A: Generators use much less memory for large data.
+
+Q: What does yield from do?
+A: It delegates part of the operations to another generator.
+
+
+Practice Tasks
+--------------
+1. Create a generator that yields Fibonacci numbers up to n.
+2. Create a generator that reads a large file line by line.
+3. Create a pipeline: numbers → filter even → square them.
+
+
+Solutions
+---------
+def fibonacci(n):
+    a, b = 0, 1
+    while a <= n:
+        yield a
+        a, b = b, a + b
+
+print(list(fibonacci(50)))
+
+def read_large_file(file_path):
+    with open(file_path, "r") as f:
+        for line in f:
+            yield line.strip()
+
+def even_filter(nums):
+    for n in nums:
+        if n % 2 == 0:
+            yield n
+
+def square(nums):
+    for n in nums:
+        yield n * n
+
+numbers = range(1, 11)
+result = square(even_filter(numbers))
+print(list(result))
+
+
+================================================================================
+3. CONTEXT MANAGERS
+================================================================================
+
+Explanation
+-----------
+Context managers allow you to allocate and release resources precisely
+using the with statement. Common example: file handling.
+
+Creating Context Manager using Class
+------------------------------------
+class MyContext:
+    def __enter__(self):
+        print("Entering context")
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        print("Exiting context")
+        if exc_type:
+            print(f"Exception occurred: {exc_value}")
+        return True          # Suppress exception
+
+with MyContext() as ctx:
+    print("Inside the with block")
+
+
+Creating Context Manager using contextlib
+-----------------------------------------
+from contextlib import contextmanager
+
+@contextmanager
+def my_context():
+    print("Setup")
+    yield "Resource"
+    print("Cleanup")
+
+with my_context() as resource:
+    print("Using:", resource)
+
+
+Interview Questions
+-------------------
+Q: What is a context manager?
+A: An object that defines runtime context using __enter__ and __exit__.
+
+Q: Why use context managers?
+A: To ensure proper resource management (files, locks, connections).
+
+Q: What does the with statement do?
+A: It automatically calls __enter__ and __exit__.
+
+
+Practice Tasks
+--------------
+1. Create a context manager that measures time taken inside the with block.
+2. Create a context manager that temporarily changes the working directory.
+
+
+Solutions
+---------
+import time
+import os
+from contextlib import contextmanager
+
+@contextmanager
+def timer():
+    start = time.time()
+    yield
+    end = time.time()
+    print(f"Time taken: {end - start:.4f} seconds")
+
+with timer():
+    time.sleep(1)
+
+@contextmanager
+def change_dir(destination):
+    original = os.getcwd()
+    os.chdir(destination)
+    try:
+        yield
+    finally:
+        os.chdir(original)
+
+
+================================================================================
+4. ADVANCED OOP
+================================================================================
+
+property, classmethod, staticmethod
+-----------------------------------
+class Employee:
+    company = "TechCorp"
+
+    def __init__(self, name, salary):
+        self.name = name
+        self._salary = salary
+
+    @property
+    def salary(self):
+        return self._salary
+
+    @salary.setter
+    def salary(self, value):
+        if value < 0:
+            raise ValueError("Salary cannot be negative")
+        self._salary = value
+
+    @classmethod
+    def from_string(cls, data):
+        name, salary = data.split("-")
+        return cls(name, int(salary))
+
+    @staticmethod
+    def is_workday(day):
+        return day.lower() not in ["saturday", "sunday"]
+
+emp = Employee("Amit", 50000)
+print(emp.salary)
+emp.salary = 60000
+
+emp2 = Employee.from_string("Sneha-55000")
+print(emp2.name, emp2.salary)
+
+print(Employee.is_workday("Monday"))
+
+
+Magic Methods (Dunder Methods)
+------------------------------
+class Book:
+    def __init__(self, title, pages):
+        self.title = title
+        self.pages = pages
+
+    def __str__(self):
+        return f"Book: {self.title}"
+
+    def __repr__(self):
+        return f"Book('{self.title}', {self.pages})"
+
+    def __len__(self):
+        return self.pages
+
+    def __eq__(self, other):
+        return self.pages == other.pages
+
+    def __add__(self, other):
+        return Book(f"{self.title} & {other.title}", self.pages + other.pages)
+
+b1 = Book("Python Basics", 300)
+b2 = Book("Advanced Python", 400)
+
+print(b1)
+print(len(b1))
+print(b1 == b2)
+print(b1 + b2)
+
+
+Interview Questions
+-------------------
+Q: Difference between @property, @classmethod and @staticmethod?
+A: @property → treats method as attribute.
+   @classmethod → receives class as first argument (cls).
+   @staticmethod → does not receive self or cls.
+
+Q: What are magic methods?
+A: Special methods with double underscores that allow operator overloading
+   and customization of class behavior.
+
+Q: What is the difference between __str__ and __repr__?
+A: __str__ is for readable output (end user).
+   __repr__ is for unambiguous representation (developers/debugging).
+
+
+Practice Tasks
+--------------
+1. Create a class Temperature with property that stores Celsius and
+   automatically provides Fahrenheit.
+2. Create a class Vector that supports addition using __add__.
+3. Create a class that counts how many instances have been created
+   using a class variable.
+
+
+Solutions
+---------
+class Temperature:
+    def __init__(self, celsius):
+        self._celsius = celsius
+
+    @property
+    def celsius(self):
+        return self._celsius
+
+    @celsius.setter
+    def celsius(self, value):
+        self._celsius = value
+
+    @property
+    def fahrenheit(self):
+        return (self._celsius * 9/5) + 32
+
+t = Temperature(25)
+print(t.fahrenheit)
+
+class Vector:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        return Vector(self.x + other.x, self.y + other.y)
+
+    def __str__(self):
+        return f"Vector({self.x}, {self.y})"
+
+v1 = Vector(2, 3)
+v2 = Vector(4, 5)
+print(v1 + v2)
+
+class Counter:
+    count = 0
+
+    def __init__(self):
+        Counter.count += 1
+
+a = Counter()
+b = Counter()
+c = Counter()
+print("Instances created:", Counter.count)
+
+
+================================================================================
+5. COLLECTIONS MODULE
+================================================================================
+
+from collections import Counter, defaultdict, namedtuple, deque, OrderedDict
+
+# Counter
+colors = ["red", "blue", "red", "green", "blue", "blue"]
+count = Counter(colors)
+print(count)
+print(count.most_common(2))
+
+# defaultdict
+dd = defaultdict(int)
+dd["apple"] += 1
+dd["banana"] += 2
+print(dd)
+
+# namedtuple
+Point = namedtuple("Point", ["x", "y"])
+p = Point(10, 20)
+print(p.x, p.y)
+
+# deque (double-ended queue)
+d = deque([1, 2, 3])
+d.appendleft(0)
+d.append(4)
+print(d)
+
+
+Interview Questions
+-------------------
+Q: When to use Counter?
+A: When you need to count hashable objects.
+
+Q: Advantage of defaultdict?
+A: It automatically provides default values for missing keys.
+
+Q: What is namedtuple?
+A: A lightweight object type similar to struct (immutable).
+
+
+Practice Tasks
+--------------
+1. Count the frequency of each word in a sentence using Counter.
+2. Use defaultdict to group students by their grade.
+3. Use deque to implement a simple queue.
+
+
+Solutions
+---------
+from collections import Counter, defaultdict, deque
+
+sentence = "python is easy and python is powerful"
+word_count = Counter(sentence.split())
+print(word_count)
+
+students = [("Amit", "A"), ("Sneha", "B"), ("Rahul", "A"), ("Priya", "B")]
+grade_dict = defaultdict(list)
+for name, grade in students:
+    grade_dict[grade].append(name)
+print(grade_dict)
+
+queue = deque()
+queue.append("first")
+queue.append("second")
+print(queue.popleft())
+
+
+================================================================================
+6. FUNCTOOLS MODULE
+================================================================================
+
+from functools import lru_cache, partial, wraps, reduce
+
+# lru_cache – Memoization
+@lru_cache(maxsize=128)
+def fibonacci(n):
+    if n < 2:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+print(fibonacci(30))
+print(fibonacci.cache_info())
+
+# partial
+def power(base, exp):
+    return base ** exp
+
+square = partial(power, exp=2)
+cube = partial(power, exp=3)
+
+print(square(5))
+print(cube(3))
+
+
+Interview Questions
+-------------------
+Q: What is memoization?
+A: Caching the results of expensive function calls.
+
+Q: What does lru_cache do?
+A: It caches the results of a function using Least Recently Used strategy.
+
+Q: What is partial?
+A: It freezes some arguments of a function and returns a new function.
+
+
+================================================================================
+7. TYPE HINTS
+================================================================================
+
+from typing import List, Dict, Optional, Union, Callable
+
+def greet(name: str) -> str:
+    return f"Hello, {name}"
+
+def process_items(items: List[int]) -> int:
+    return sum(items)
+
+def get_user(user_id: int) -> Optional[Dict[str, str]]:
+    if user_id == 1:
+        return {"name": "Amit", "city": "Delhi"}
+    return None
+
+def apply(func: Callable[[int, int], int], a: int, b: int) -> int:
+    return func(a, b)
+
+
+Interview Questions
+-------------------
+Q: Are type hints enforced at runtime?
+A: No. They are only for static analysis tools and readability.
+
+Q: What is Optional[str]?
+A: It means the value can be str or None.
+
+
+================================================================================
+8. REGULAR EXPRESSIONS
+================================================================================
+
+import re
+
+text = "My email is amit123@gmail.com and phone is 9876543210"
+
+# Search
+match = re.search(r"\d{10}", text)
+if match:
+    print("Phone:", match.group())
+
+# Find all emails
+emails = re.findall(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", text)
+print("Emails:", emails)
+
+# Substitution
+new_text = re.sub(r"\d{10}", "XXXXXXXXXX", text)
+print(new_text)
+
+# Compile for performance
+pattern = re.compile(r"\b\w{5}\b")
+print(pattern.findall("Hello world python code"))
+
+
+Interview Questions
+-------------------
+Q: Difference between re.search and re.findall?
+A: search returns first match. findall returns all matches.
+
+Q: What does re.sub do?
+A: It replaces occurrences of a pattern with a string.
+
+
+Practice Tasks
+--------------
+1. Extract all hashtags from a tweet text.
+2. Validate if a string is a valid Indian mobile number.
+3. Remove all special characters from a string.
+
+
+Solutions
+---------
+import re
+
+tweet = "Loving #Python and #MachineLearning #AI"
+hashtags = re.findall(r"#\w+", tweet)
+print(hashtags)
+
+def is_valid_mobile(number):
+    return bool(re.fullmatch(r"[6-9]\d{9}", number))
+
+print(is_valid_mobile("9876543210"))
+print(is_valid_mobile("12345"))
+
+text = "Hello@World! #Python$2024"
+clean = re.sub(r"[^a-zA-Z0-9\s]", "", text)
+print(clean)
+
+
+================================================================================
+9. CONCURRENCY
+================================================================================
+
+# ---------- Threading ----------
+import threading
+import time
+
+def worker(name):
+    print(f"{name} starting")
+    time.sleep(2)
+    print(f"{name} finished")
+
+threads = []
+for i in range(3):
+    t = threading.Thread(target=worker, args=(f"Thread-{i}",))
+    threads.append(t)
+    t.start()
+
+for t in threads:
+    t.join()
+
+print("All threads completed")
+
+
+# ---------- Multiprocessing ----------
+from multiprocessing import Process
+
+def square(n):
+    print(n * n)
+
+processes = []
+for i in range(5):
+    p = Process(target=square, args=(i,))
+    processes.append(p)
+    p.start()
+
+for p in processes:
+    p.join()
+
+
+# ---------- Asyncio ----------
+import asyncio
+
+async def say_after(delay, message):
+    await asyncio.sleep(delay)
+    print(message)
+
+async def main():
+    task1 = asyncio.create_task(say_after(1, "Hello"))
+    task2 = asyncio.create_task(say_after(2, "World"))
+    await task1
+    await task2
+
+# asyncio.run(main())   # Uncomment to run
+
+
+Interview Questions
+-------------------
+Q: Difference between Threading and Multiprocessing?
+A: Threading is good for I/O bound tasks (shares memory).
+   Multiprocessing is good for CPU bound tasks (separate memory).
+
+Q: What is the GIL?
+A: Global Interpreter Lock – only one thread can execute Python bytecode
+   at a time.
+
+Q: When to use asyncio?
+A: For high concurrency I/O-bound applications (web servers, network).
+
+
+================================================================================
+10. DATACLASSES
+================================================================================
+
+from dataclasses import dataclass, field
+
+@dataclass
+class Product:
+    name: str
+    price: float
+    quantity: int = 0
+    tags: list = field(default_factory=list)
+
+    def total(self):
+        return self.price * self.quantity
+
+p1 = Product("Laptop", 50000, 2)
+p2 = Product("Laptop", 50000, 2)
+
+print(p1)
+print(p1.total())
+print(p1 == p2)          # True because dataclass implements __eq__
+
+
+Interview Questions
+-------------------
+Q: What is the advantage of dataclasses?
+A: Automatically generates __init__, __repr__, __eq__ etc.
+
+
+================================================================================
+11. TESTING BASICS (unittest)
+================================================================================
+
+import unittest
+
+def add(a, b):
+    return a + b
+
+class TestMath(unittest.TestCase):
+    def test_add(self):
+        self.assertEqual(add(2, 3), 5)
+        self.assertEqual(add(-1, 1), 0)
+
+    def test_add_type(self):
+        self.assertIsInstance(add(2, 3), int)
+
+# if __name__ == "__main__":
+#     unittest.main()
+
+
+================================================================================
+ADVANCED INTERVIEW CHEAT SHEET
+================================================================================
+
+Topic                    Must Know
+-----------------------  -------------------------------------------------
+Decorators               @decorator, wraps, class decorators, nested
+Generators               yield, yield from, generator expressions
+Context Managers         with, __enter__, __exit__, contextlib
+Advanced OOP             property, classmethod, staticmethod, dunder methods
+Collections              Counter, defaultdict, namedtuple, deque
+functools                lru_cache, partial, wraps
+Type Hints               List, Dict, Optional, Callable
+Regex                    search, findall, sub, compile
+Concurrency              Threading vs Multiprocessing vs Asyncio, GIL
+Dataclasses              @dataclass, field
+Testing                  unittest, assertEqual, assertRaises
+
+
+================================================================================
+BONUS PROJECT IDEAS (Advanced)
+================================================================================
+
+1. Build a simple web scraper using requests + BeautifulSoup + concurrency
+2. Create a decorator-based logging and timing system
+3. Build an asynchronous chat server using asyncio
+4. Create a data processing pipeline using generators
+5. Write unit tests for a banking system class
+
+
+================================================================================
+END OF ADVANCED PYTHON FILE
+================================================================================
+
+Recommendation:
+1. Practice every example by typing it yourself.
+2. Modify the code and observe the behavior.
+3. Solve the practice tasks without looking at solutions first.
+4. After finishing this, start building real projects.
