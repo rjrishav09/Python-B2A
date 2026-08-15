@@ -1,0 +1,383 @@
+================================================================================
+        INTERMEDIATE PYTHON – DOCUMENTATION + EXPLANATION + INTERVIEW QUESTIONS
+================================================================================
+
+This level builds on the beginner topics. You will learn modules, file handling,
+exception handling, Object-Oriented Programming (OOP), comprehensions, lambda,
+and more.
+
+Each section contains:
+- Clear explanation
+- Code examples
+- Important points
+- Interview questions
+
+
+================================================================================
+1. MODULES AND PACKAGES
+================================================================================
+
+Explanation
+-----------
+A module is a Python file (.py) containing functions, classes, or variables
+that you can reuse.
+A package is a folder containing multiple modules (and an __init__.py file).
+
+Ways to import
+--------------
+import math
+print(math.sqrt(16))          # 4.0
+
+from math import sqrt, pi
+print(sqrt(25))               # 5.0
+print(pi)
+
+from math import *            # import everything (not recommended)
+
+import math as m              # alias
+print(m.ceil(4.2))            # 5
+
+Creating your own module
+------------------------
+# mymodule.py
+def greet(name):
+    return f"Hello, {name}!"
+
+# main.py
+import mymodule
+print(mymodule.greet("Amit"))
+
+Useful Built-in Modules
+-----------------------
+- math      → mathematical functions
+- random    → random numbers
+- datetime  → dates and time
+- os        → operating system interaction
+- sys       → system-specific parameters
+- json      → working with JSON data
+
+Interview Questions
+-------------------
+Q: What is a module?
+A: A .py file containing reusable code.
+
+Q: What is a package?
+A: A directory containing multiple modules and __init__.py.
+
+Q: Difference between import and from ... import?
+A: import imports the whole module. from ... import imports specific items.
+
+Q: What is __name__ == "__main__"?
+A: Used to check if the file is being run directly or imported.
+
+
+================================================================================
+2. FILE HANDLING
+================================================================================
+
+Explanation
+-----------
+Python can create, read, write, and delete files.
+
+Basic Operations
+----------------
+# Writing to a file
+with open("data.txt", "w") as f:
+    f.write("Hello Python\n")
+    f.write("This is intermediate level")
+
+# Reading a file
+with open("data.txt", "r") as f:
+    content = f.read()
+    print(content)
+
+# Reading line by line
+with open("data.txt", "r") as f:
+    for line in f:
+        print(line.strip())
+
+File Modes
+----------
+Mode    Meaning
+------  -------------------------
+"r"     Read (default)
+"w"     Write (overwrites)
+"a"     Append
+"x"     Create (fails if exists)
+"r+"    Read + Write
+"b"     Binary mode ("rb", "wb")
+
+Why use with?
+-------------
+It automatically closes the file even if an error occurs.
+
+Interview Questions
+-------------------
+Q: Why should we use with statement for files?
+A: It automatically closes the file and handles exceptions properly.
+
+Q: Difference between r+ and w+?
+A: r+ requires the file to exist. w+ creates a new file or overwrites.
+
+Q: How to read a file line by line efficiently?
+A: Using a for loop on the file object.
+
+
+================================================================================
+3. EXCEPTION HANDLING
+================================================================================
+
+Explanation
+-----------
+Exceptions are errors that occur during execution. We handle them using
+try-except.
+
+try:
+    num = int(input("Enter a number: "))
+    result = 10 / num
+    print(result)
+except ValueError:
+    print("Please enter a valid number")
+except ZeroDivisionError:
+    print("Cannot divide by zero")
+except Exception as e:
+    print("Something went wrong:", e)
+else:
+    print("No error occurred")
+finally:
+    print("This always runs")
+
+Raising your own exception
+--------------------------
+age = -5
+if age < 0:
+    raise ValueError("Age cannot be negative")
+
+Common Exceptions
+-----------------
+- ValueError
+- TypeError
+- ZeroDivisionError
+- FileNotFoundError
+- IndexError
+- KeyError
+- AttributeError
+
+Interview Questions
+-------------------
+Q: What is the difference between syntax error and exception?
+A: Syntax error is detected before running. Exception occurs during execution.
+
+Q: What is the purpose of finally block?
+A: Code that always executes, whether exception occurs or not.
+
+Q: What is else in try-except?
+A: Runs only if no exception occurred.
+
+Q: How do you create a custom exception?
+A: By creating a class that inherits from Exception.
+
+
+================================================================================
+4. OBJECT-ORIENTED PROGRAMMING (OOP)
+================================================================================
+
+Explanation
+-----------
+OOP is a way of organizing code using classes and objects.
+
+Class and Object
+----------------
+class Student:
+    def __init__(self, name, age):      # Constructor
+        self.name = name
+        self.age = age
+
+    def display(self):
+        print(f"Name: {self.name}, Age: {self.age}")
+
+s1 = Student("Priya", 21)
+s1.display()
+
+Four Pillars of OOP
+-------------------
+1. Encapsulation  → Bundling data and methods together + restricting access
+2. Inheritance    → Child class inherits from parent class
+3. Polymorphism   → Same method name, different behavior
+4. Abstraction    → Hiding complex implementation details
+
+Inheritance Example
+-------------------
+class Animal:
+    def speak(self):
+        print("Animal speaks")
+
+class Dog(Animal):
+    def speak(self):                  # Method Overriding
+        print("Dog barks")
+
+d = Dog()
+d.speak()                             # Dog barks
+
+Types of Inheritance
+--------------------
+- Single
+- Multiple
+- Multilevel
+- Hierarchical
+- Hybrid
+
+Interview Questions
+-------------------
+Q: What is a class and an object?
+A: Class is a blueprint. Object is an instance of a class.
+
+Q: What is __init__?
+A: Constructor method that initializes the object.
+
+Q: What is self?
+A: Refers to the current instance of the class.
+
+Q: Difference between method overloading and overriding?
+A: Python does not support traditional overloading. Overriding means
+   redefining a method in child class.
+
+Q: What is encapsulation?
+A: Binding data and methods together and restricting direct access
+   (using _ or __).
+
+
+================================================================================
+5. LIST, DICTIONARY & SET COMPREHENSIONS
+================================================================================
+
+Explanation
+-----------
+A shorter and more readable way to create lists, dictionaries, or sets.
+
+# List Comprehension
+squares = [x**2 for x in range(1, 6)]
+print(squares)                        # [1, 4, 9, 16, 25]
+
+even = [x for x in range(10) if x % 2 == 0]
+print(even)                           # [0, 2, 4, 6, 8]
+
+# Dictionary Comprehension
+sq_dict = {x: x**2 for x in range(1, 6)}
+print(sq_dict)                        # {1:1, 2:4, 3:9, 4:16, 5:25}
+
+# Set Comprehension
+unique = {x for x in [1, 2, 2, 3, 3, 4]}
+print(unique)                         # {1, 2, 3, 4}
+
+Interview Questions
+-------------------
+Q: What is list comprehension?
+A: A concise way to create lists using a single line.
+
+Q: Advantage of comprehensions?
+A: More readable and usually faster than traditional loops.
+
+Q: Can we use if-else in list comprehension?
+A: Yes: [x if x%2==0 else "odd" for x in range(5)]
+
+
+================================================================================
+6. LAMBDA, map(), filter(), reduce()
+================================================================================
+
+Lambda (Anonymous Function)
+---------------------------
+add = lambda a, b: a + b
+print(add(5, 3))                      # 8
+
+square = lambda x: x**2
+print(square(6))                      # 36
+
+map()
+-----
+nums = [1, 2, 3, 4]
+squared = list(map(lambda x: x**2, nums))
+print(squared)                        # [1, 4, 9, 16]
+
+filter()
+--------
+nums = [1, 2, 3, 4, 5, 6]
+evens = list(filter(lambda x: x % 2 == 0, nums))
+print(evens)                          # [2, 4, 6]
+
+reduce() (from functools)
+-------------------------
+from functools import reduce
+nums = [1, 2, 3, 4]
+total = reduce(lambda a, b: a + b, nums)
+print(total)                          # 10
+
+Interview Questions
+-------------------
+Q: What is a lambda function?
+A: A small anonymous function defined with lambda.
+
+Q: Difference between map and filter?
+A: map applies a function to every item. filter selects items based on
+   a condition.
+
+Q: When do we use reduce?
+A: When we want to reduce a sequence to a single value.
+
+
+================================================================================
+7. ITERATORS AND GENERATORS (Introduction)
+================================================================================
+
+Iterator
+--------
+nums = [10, 20, 30]
+it = iter(nums)
+print(next(it))                       # 10
+print(next(it))                       # 20
+
+Generator (uses yield)
+----------------------
+def my_generator():
+    yield 1
+    yield 2
+    yield 3
+
+for value in my_generator():
+    print(value)
+
+Advantage of Generators
+-----------------------
+They are memory efficient because they generate values one by one
+(lazy evaluation).
+
+
+================================================================================
+INTERMEDIATE INTERVIEW CHEAT SHEET
+================================================================================
+
+Topic                  Must Know
+---------------------  -------------------------------------------------------
+Modules                import, from, as, __name__
+File Handling          open, with, modes (r, w, a, r+)
+Exception Handling     try, except, else, finally, raise
+OOP                    class, object, __init__, self, inheritance
+Comprehensions         list, dict, set comprehensions
+Lambda & Functional    lambda, map, filter, reduce
+Generators             yield, next, memory efficiency
+
+
+================================================================================
+PRACTICE TASKS (INTERMEDIATE)
+================================================================================
+
+1. Create a class BankAccount with methods deposit, withdraw, and get_balance.
+2. Write a program that reads a text file and counts the number of words.
+3. Create a list of squares of even numbers from 1 to 20 using list comprehension.
+4. Handle ZeroDivisionError and ValueError in a calculator program.
+
+
+================================================================================
+END OF DOCUMENT
+================================================================================

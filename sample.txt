@@ -1,0 +1,6 @@
+Hello, this is Intermediate Python.
+Learning file handling is important.
+Practice makes perfect.
+This line was appended.
+
+--- Extra line added using r+ mode ---
