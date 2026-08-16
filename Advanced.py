@@ -14,7 +14,7 @@ def say_hello():
 say_hello()
 
 
-# Decorator with arguments
+# Decorator with arguments (Also good for all the new coders )
 def repeat(times):
     def decorator(func):
         def wrapper(*args, **kwargs):
