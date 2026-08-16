@@ -1,5 +1,5 @@
 
-# Basic Decorator
+# Basic Decorator (Good for initial coder to learn this)
 def my_decorator(func):
     def wrapper():
         print("Before function")
