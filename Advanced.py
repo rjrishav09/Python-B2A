@@ -30,7 +30,7 @@ def greet(name):
 greet("Amit")
 
 
-# Using functools.wraps
+# Using functools.wraps (This part is also very important for the ai role)
 from functools import wraps
 
 def logger(func):
