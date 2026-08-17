@@ -49,7 +49,7 @@ def add(a, b):
 print(add(10, 20))
 
 
-# Timing Decorator
+# Timing Decorator (Best for us for working!)
 import time
 from functools import wraps
 
