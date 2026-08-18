@@ -71,7 +71,7 @@ def slow():
 slow()
 
 
-# Class-based Decorator (Class for learning)
+# Class-based Decorator (Class for learning) things are good
 class CountCalls:
     def __init__(self, func):
         self.func = func
