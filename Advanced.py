@@ -94,7 +94,7 @@ say_hi()
 # 1. Create a decorator that prints "Start" and "End" around any function.
 # 2. Create a decorator that only allows a function to run if a password is correct.
 # 3. Create a decorator that caches the result of a function (simple memoization).
-
+# 4. Create all 1,2,3 in a single files
 
 # Solutions
 def start_end(func):
